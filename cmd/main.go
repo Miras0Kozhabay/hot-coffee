@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"hot-coffee/internal/dal"
 	"hot-coffee/internal/handler"
@@ -11,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"log/slog"
 	"os/signal"
 	"syscall"
 	"time"

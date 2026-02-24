@@ -1,7 +1,10 @@
 package utils
 
-import "fmt"
-
+import (
+	"flag"
+	"fmt"
+	"os"
+)
 const helpText = `Coffee Shop Management System
 
 Usage:
@@ -13,34 +16,30 @@ Options:
   --port N     Port number.
   --dir S      Path to the data directory.`
 
-func PrintHelp() {
-	fmt.Println(helpText)
-}
-
 type Config struct {
-	Port    int
+	Port    string
 	DataDir string
 }
 
 func Load() (*Config, error) {
 	var (
-		port    int
+		port    string
 		dataDir string
 	)
 
-	flag.IntVar(&port, "port", 8080, "Port number")
+	flag.StringVar(&port, "port", "8080", "Port number")
 	flag.StringVar(&dataDir, "dir", "data", "Path to the data directory")
-	flag.Usage = printUsage()
+	flag.Usage = func (){fmt.Println(helpText)}
 	flag.Parse()
 	// Railway предоставляет PORT через переменную окружения
-	port := os.Getenv("PORT")
+	port = os.Getenv("PORT")
 	if port == "" {
     	port = "8080"
 	}
 
-	dir := "data"
+	dataDir = "data"
 
-	if port < 1 || port > 65535 {
+	if port < "1" || port > "65535" {
 		return nil, fmt.Errorf("invalid port number %d, must be between 1 and 65535", port)
 	}
 
