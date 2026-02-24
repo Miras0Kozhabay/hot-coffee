@@ -1,0 +1,62 @@
+[
+ {
+  "order_id": "order123",
+  "customer_name": "Alice Smith1",
+  "items": [
+   {
+    "product_id": "latte",
+    "quantity": 2
+   },
+   {
+    "product_id": "muffin",
+    "quantity": 1
+   },
+   {
+    "product_id": "espresso",
+    "quantity": 1
+   }
+  ],
+  "status": "closed",
+  "created_at": "2023-10-01T09:30:00Z"
+ },
+ {
+  "order_id": "order-1771796479451",
+  "customer_name": "Какашии",
+  "items": [
+   {
+    "product_id": "muffin",
+    "quantity": 1
+   },
+   {
+    "product_id": "latte",
+    "quantity": 1
+   }
+  ],
+  "status": "closed",
+  "created_at": "2026-02-23T02:41:19+05:00"
+ },
+ {
+  "order_id": "order-1771799577214",
+  "customer_name": "Хатико",
+  "items": [
+   {
+    "product_id": "latte",
+    "quantity": 1
+   }
+  ],
+  "status": "closed",
+  "created_at": "2026-02-23T03:32:57+05:00"
+ },
+ {
+  "order_id": "order-1771799655743",
+  "customer_name": "папа",
+  "items": [
+   {
+    "product_id": "espresso",
+    "quantity": 1
+   }
+  ],
+  "status": "closed",
+  "created_at": "2026-02-23T03:34:15+05:00"
+ }
+]

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anteiku - Склад</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto+Mono:wght@300;400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* === TOKYO GHOUL / ANTEIKU THEME CSS === */
+        :root {
+            --bg-main: #0a0a0c;
+            /* Почти черный фон */
+            --bg-panel: #14141a;
+            /* Цвет панелей и карточек */
+            --text-primary: #e0e0e0;
+            /* Светлый текст */
+            --text-muted: #adb5bd;
+            /* Серый текст */
+            --accent-red: #8f0e0e;
+            /* Глубокий красный (цвет глаз/кагуне) */
+            --accent-red-glow: #ff3c3c;
+            /* Яркий красный для свечения */
+            --accent-coffee: #c7a17a;
+            /* Цвет кофе для заголовков */
+            --border-color: #2a2a35;
+            /* Цвет тонких рамок */
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Roboto Mono', monospace;
+            /* Технологичный, немного "сырой" шрифт */
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            /* Легкая текстура */
+        }
+
+        h1,
+        h2,
+        h3,
+        .navbar-brand {
+            font-family: 'Cinzel', serif;
+            /* Элегантный шрифт для заголовков */
+            color: var(--accent-coffee);
+            letter-spacing: 1px;
+        }
+
+        /* Кастомный скроллбар */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-red);
+            border-radius: 4px;
+        }
+
+        /* === БОКОВАЯ ПАНЕЛЬ НАВИГАЦИИ (Sidebar) === */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 20px 0;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.5);
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border-color);
+        }
+
+        .sidebar .brand-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-red);
+            text-shadow: 0 0 10px rgba(143, 14, 14, 0.5);
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            padding: 15px 25px;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            font-family: 'Cinzel', serif;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-link.active {
+            color: var(--accent-red-glow);
+            border-left-color: var(--accent-red);
+            background: linear-gradient(90deg, rgba(143, 14, 14, 0.1) 0%, transparent 100%);
+        }
+
+        /* === ОСНОВНОЙ КОНТЕНТ === */
+        .main-content {
+            margin-left: 250px;
+            /* Отступ под ширину сайдбара */
+            padding: 40px;
+        }
+
+        /* Переопределение карточек Bootstrap */
+        .card {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid var(--border-color);
+            color: var(--accent-coffee);
+            font-family: 'Cinzel', serif;
+        }
+
+        /* Переопределение таблиц Bootstrap */
+        .table {
+            color: var(--text-primary);
+            --bs-table-bg: transparent;
+            --bs-table-border-color: var(--border-color);
+        }
+
+        .table thead th {
+            border-bottom: 2px solid var(--accent-red);
+            color: var(--text-muted);
+            font-weight: normal;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .table-hover tbody tr:hover {
+            color: var(--text-primary);
+            background-color: rgba(143, 14, 14, 0.05);
+            /* Красный оттенок при наведении */
+        }
+
+        code {
+            color: var(--accent-red-glow);
+            background-color: rgba(143, 14, 14, 0.1);
+            padding: 2px 4px;
+            border-radius: 2px;
+        }
+
+        .btn-anteiku {
+            background-color: transparent;
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            transition: all 0.3s;
+            font-family: 'Cinzel', serif;
+        }
+
+        .btn-anteiku:hover {
+            background-color: var(--accent-red);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent-red-glow);
+        }
+
+        /* Декоративная линия */
+        .separator-line {
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-red), transparent);
+            margin: 20px 0 40px 0;
+            opacity: 0.5;
+        }
+
+        /* Убираем "белое пятно" модальных окон */
+        .modal-content {
+            background-color: var(--bg-panel) !important;
+            border: 1px solid var(--accent-red) !important;
+            color: var(--text-primary) !important;
+            box-shadow: 0 0 30px rgba(143, 14, 14, 0.2) !important;
+        }
+
+        .modal-header,
+        .modal-footer {
+            border-color: var(--border-color) !important;
+        }
+
+        /* Стилизация полей ввода (input) */
+        .form-control,
+        .form-select {
+            background-color: var(--bg-main) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: var(--accent-red-glow) !important;
+            box-shadow: 0 0 10px rgba(255, 60, 60, 0.2) !important;
+            background-color: #1a1a22 !important;
+        }
+
+        /* Чтобы текст в полях ввода не был слишком темным */
+        .form-control::placeholder {
+            color: var(--text-muted) !important;
+            opacity: 0.6;
+        }
+
+        /* Исправляем кнопку закрытия (крестик) */
+        .btn-close-white {
+            filter: invert(1) grayscale(1) brightness(2);
+            /* Делаем её четкой на темном фоне */
+        }
+
+        /* Цвет для заголовков в модалке */
+        .modal-title {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-coffee) !important;
+            text-shadow: 0 0 5px rgba(199, 161, 122, 0.3);
+        }
+
+        /* Единый стиль логотипа для всех страниц */
+        .logo-link {
+            text-decoration: none !important;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo {
+            font-family: 'Cinzel', serif;
+            /* Принудительно задаем шрифт */
+            font-size: 1.8rem;
+            font-weight: 700;
+            /* Жирный шрифт */
+            color: var(--accent-red) !important;
+            text-shadow: 0 0 10px rgba(143, 14, 14, 0.5);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .logo-link:hover .brand-logo {
+            color: var(--accent-red-glow) !important;
+            text-shadow: 0 0 20px var(--accent-red-glow);
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div>
+                    <div class="brand-section pt-3">
+                        <a href="/" class="logo-link">
+                            <div class="brand-logo">☕ ANTEIKU</div>
+                        </a>
+                        <small class="text-muted">Система управления</small>
+                    </div>
+                    <ul class="nav flex-column mt-4">
+                        <li class="nav-item"><a class="nav-link active" href="/inventory.html">📦 Склад</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/menu.html">📜 Меню</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/orders.html">🔔 Заказы</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/reports.html">📈 Отчеты</a></li>
+                    </ul>
+                </div>
+
+                <div class="character-profile"
+                    style="padding: 20px; border-top: 1px solid var(--border-color); background: rgba(0,0,0,0.3); text-align: center;">
+                    <img src="/yomo.jpg" alt="Renji Yomo" class="avatar"
+                        onerror="this.src='https://via.placeholder.com/80/14141a/ff3c3c?text=RY'"
+                        style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 2px solid var(--accent-red); box-shadow: 0 0 15px rgba(143, 14, 14, 0.4); transition: transform 0.3s;">
+                    <p class="char-name"
+                        style="font-family: 'Cinzel', serif; color: var(--accent-coffee); margin: 0; font-size: 1.1rem;">
+                        Ренджи Йомо</p>
+                    <p class="char-role"
+                        style="font-size: 0.8rem; color: var(--accent-red); text-transform: uppercase; letter-spacing: 2px;">
+                        Снабженец</p>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+                    <h1 class="h2">Состояние склада</h1>
+                </div>
+                <div class="separator-line"></div>
+
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Запасы ингредиентов</span>
+                        <button class="btn btn-sm btn-anteiku" data-bs-toggle="modal"
+                            data-bs-target="#addInventoryModal">+ Пополнить запасы</button>
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="ps-4">ID Ингредиента</th>
+                                        <th scope="col">Название</th>
+                                        <th scope="col">Количество</th>
+                                        <th scope="col">Ед. изм.</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="inventory-table-body">
+                                    <tr>
+                                        <td colspan="4" class="text-center p-5 text-muted">
+                                            Загрузка данных из системы...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        async function submitInventory() {
+            const data = {
+                ingredient_id: document.getElementById('inv_id').value,
+                name: document.getElementById('inv_name').value,
+                quantity: parseInt(document.getElementById('inv_qty').value),
+                unit: document.getElementById('inv_unit').value
+            };
+
+            try {
+                const response = await fetch('/inventory', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Закрываем модалку и обновляем таблицу
+                    bootstrap.Modal.getInstance(document.getElementById('addInventoryModal')).hide();
+                    loadInventory();
+                    document.getElementById('inventoryForm').reset();
+                } else {
+                    const err = await response.json();
+                    alert("Ошибка Йомо: " + err.error);
+                }
+            } catch (e) { alert("Связь с сервером потеряна."); }
+        }
+        async function loadInventory() {
+            try {
+                const response = await fetch('/inventory');
+                const items = await response.json();
+                const tbody = document.getElementById('inventory-table-body');
+                tbody.innerHTML = '';
+
+                items.forEach(item => {
+                    const tr = document.createElement('tr');
+                    const qtyClass = item.quantity < 100 ? 'text-danger fw-bold fs-5' : 'text-white fw-bold fs-5';
+
+                    tr.innerHTML = `
+                <td class="ps-4"><code>${item.ingredient_id}</code></td>
+                <td class="fw-bold" style="color: var(--accent-coffee);">${item.name}</td>
+                <td class="${qtyClass}">${item.quantity}</td>
+                <td class="text-muted">${item.unit}</td>
+                <td class="text-end pe-4">
+                    <button class="btn btn-sm btn-outline-info me-2" onclick="openEditModal('${item.ingredient_id}', '${item.name}', ${item.quantity}, '${item.unit}')">✎</button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteInv('${item.ingredient_id}')">×</button>
+                </td>
+            `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) { console.error('Ошибка:', error); }
+        }
+        window.onload = loadInventory;
+        async function submitAddInv() {
+            const data = {
+                ingredient_id: document.getElementById('add_id').value,
+                name: document.getElementById('add_name').value,
+                quantity: parseInt(document.getElementById('add_qty').value),
+                unit: document.getElementById('add_unit').value
+            };
+            const response = await fetch('/inventory', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('addInvModal')).hide();
+                loadInventory();
+                document.getElementById('addInvForm').reset();
+            }
+        }
+
+        // ОТКРЫТИЕ МОДАЛКИ РЕДАКТИРОВАНИЯ
+        function openEditModal(id, name, qty, unit) {
+            document.getElementById('edit_id_hidden').value = id;
+            document.getElementById('edit_name').value = name;
+            document.getElementById('edit_qty').value = qty;
+            document.getElementById('edit_unit').value = unit;
+            new bootstrap.Modal(document.getElementById('editInvModal')).show();
+        }
+
+        // ОБНОВЛЕНИЕ (PUT)
+        async function submitEditInv() {
+            const id = document.getElementById('edit_id_hidden').value;
+            const data = {
+                ingredient_id: id,
+                name: document.getElementById('edit_name').value,
+                quantity: parseInt(document.getElementById('edit_qty').value),
+                unit: document.getElementById('edit_unit').value
+            };
+            const response = await fetch(`/inventory/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            if (response.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('editInvModal')).hide();
+                loadInventory();
+            }
+        }
+
+        // УДАЛЕНИЕ (DELETE)
+        async function deleteInv(id) {
+            if (!confirm(`Йомо: Списать "${id}" со склада?`)) return;
+            const response = await fetch(`/inventory/${id}`, { method: 'DELETE' });
+            if (response.ok) loadInventory();
+        }
+    </script>
+    <div class="modal fade" id="addInventoryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content stat-card"
+                style="background-color: var(--bg-panel); border: 1px solid var(--accent-red);">
+                <div class="modal-header" style="border-bottom: 1px solid var(--border-color);">
+                    <h5 class="modal-title" style="font-family: 'Cinzel', serif; color: var(--accent-coffee);">Новая
+                        поставка для Йомо</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="inventoryForm">
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">ID Ингредиента (например: coffee_beans)</label>
+                            <input type="text" id="inv_id" class="form-control bg-dark text-white border-secondary"
+                                required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Название</label>
+                            <input type="text" id="inv_name" class="form-control bg-dark text-white border-secondary"
+                                required>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-muted small">Количество</label>
+                                <input type="number" id="inv_qty"
+                                    class="form-control bg-dark text-white border-secondary" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-muted small">Ед. измерения</label>
+                                <input type="text" id="inv_unit"
+                                    class="form-control bg-dark text-white border-secondary" placeholder="г, мл, шт"
+                                    required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer" style="border-top: 1px solid var(--border-color);">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-anteiku" onclick="submitInventory()">Принять на склад</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="modal fade" id="addInvModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content bg-panel border-red">
+                <div class="modal-header border-border">
+                    <h5 class="modal-title font-cinzel text-coffee">Новая поставка для Антейку</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addInvForm">
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">ID Ингредиента</label>
+                            <input type="text" id="add_id" class="form-control bg-dark text-white border-secondary"
+                                placeholder="coffee_beans" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Название</label>
+                            <input type="text" id="add_name" class="form-control bg-dark text-white border-secondary"
+                                placeholder="Зерна темной обжарки" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-muted small">Количество</label>
+                                <input type="number" id="add_qty"
+                                    class="form-control bg-dark text-white border-secondary" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-muted small">Единица изм.</label>
+                                <input type="text" id="add_unit"
+                                    class="form-control bg-dark text-white border-secondary" placeholder="г/мл/шт"
+                                    required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-border">
+                    <button type="button" class="btn btn-anteiku" onclick="submitAddInv()">Принять</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editInvModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Корректировка запасов</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editInvForm">
+                        <input type="hidden" id="edit_id_hidden">
+                        <div class="mb-3">
+                            <label class="form-label text-muted small">Название ингредиента</label>
+                            <input type="text" id="edit_name" class="form-control">
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-muted small">Количество</label>
+                                <input type="number" id="edit_qty" class="form-control">
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-muted small">Ед. измерения</label>
+                                <input type="text" id="edit_unit" class="form-control">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                        data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-anteiku" onclick="submitEditInv()">Сохранить изменения</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

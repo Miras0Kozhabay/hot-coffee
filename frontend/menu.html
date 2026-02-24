@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anteiku - Меню</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto+Mono:wght@300;400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #0a0a0c;
+            --bg-panel: #14141a;
+            --text-primary: #e0e0e0;
+            --text-muted: #adb5bd;
+            --accent-red: #8f0e0e;
+            --accent-red-glow: #ff3c3c;
+            --accent-coffee: #c7a17a;
+            --border-color: #2a2a35;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Roboto Mono', monospace;
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        .brand-logo {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-coffee);
+            letter-spacing: 1px;
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 20px 0;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-red);
+            text-shadow: 0 0 10px rgba(143, 14, 14, 0.5);
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            padding: 15px 25px;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            font-family: 'Cinzel', serif;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-link.active {
+            color: var(--accent-red-glow);
+            border-left-color: var(--accent-red);
+            background: linear-gradient(90deg, rgba(143, 14, 14, 0.1) 0%, transparent 100%);
+        }
+
+        .character-profile {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid var(--accent-red);
+            box-shadow: 0 0 15px rgba(143, 14, 14, 0.4);
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 40px;
+        }
+
+        .separator-line {
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-red), transparent);
+            margin: 20px 0 40px 0;
+            opacity: 0.5;
+        }
+
+        .menu-card {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--accent-red);
+            transition: all 0.3s;
+            height: 100%;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(143, 14, 14, 0.15);
+            border-left-color: var(--accent-red-glow);
+        }
+
+        .item-id {
+            color: var(--accent-red-glow);
+            background: rgba(143, 14, 14, 0.15);
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .menu-description {
+            color: #cfd4da;
+            font-style: italic;
+            border-left: 2px solid var(--border-color);
+            padding-left: 10px;
+        }
+
+        .menu-price {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-coffee);
+            font-size: 1.5rem;
+        }
+
+        .ing-badge {
+            background-color: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(199, 161, 122, 0.4);
+            color: #fff;
+            font-size: 0.85rem;
+            margin: 0 5px 5px 0;
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 6px;
+        }
+
+        .btn-anteiku {
+            background-color: transparent;
+            border: 1px solid var(--accent-red);
+            color: var(--accent-red);
+            transition: all 0.3s;
+            font-family: 'Cinzel', serif;
+        }
+
+        .btn-anteiku:hover {
+            background-color: var(--accent-red);
+            color: #000;
+            box-shadow: 0 0 15px var(--accent-red-glow);
+        }
+
+        .modal-content {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--accent-red);
+            color: var(--text-primary);
+        }
+
+        .modal-header,
+        .modal-footer {
+            border-color: var(--border-color);
+        }
+
+        .form-control,
+        .form-select {
+            background-color: var(--bg-main);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        /* Единый стиль логотипа для всех страниц */
+        .logo-link {
+            text-decoration: none !important;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo {
+            font-family: 'Cinzel', serif;
+            /* Принудительно задаем шрифт */
+            font-size: 1.8rem;
+            font-weight: 700;
+            /* Жирный шрифт */
+            color: var(--accent-red) !important;
+            text-shadow: 0 0 10px rgba(143, 14, 14, 0.5);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .logo-link:hover .brand-logo {
+            color: var(--accent-red-glow) !important;
+            text-shadow: 0 0 20px var(--accent-red-glow);
+            transform: scale(1.02);
+        }
+
+        .char-role {
+            font-size: 0.8rem;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div>
+                    <div class="brand-section pt-3">
+                        <a href="/" class="logo-link">
+                            <div class="brand-logo">☕ ANTEIKU</div>
+                        </a>
+                        <small class="text-muted">Система управления</small>
+                    </div>
+                    <ul class="nav flex-column mt-4">
+                        <li class="nav-item"><a class="nav-link" href="/inventory.html">📦 Склад</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/menu.html">📜 Меню</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/orders.html">🔔 Заказы</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/reports.html">📈 Отчеты</a></li>
+                    </ul>
+                </div>
+                <div class="character-profile">
+                    <img src="/touka.jpg" alt="Touka Kirishima" class="avatar"
+                        onerror="this.src='https://via.placeholder.com/80/14141a/ff3c3c?text=TK'">
+                    <p class="char-name">Тоука Киришима</p>
+                    <p class="char-role">Дежурный бариста</p>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3">
+                    <h1 class="h2">Рецептуры напитков</h1>
+                    <button class="btn btn-anteiku" data-bs-toggle="modal" data-bs-target="#addMenuModal"
+                        onclick="prepareModal()">+ Добавить рецепт</button>
+                </div>
+                <div class="separator-line"></div>
+                <div class="row g-4" id="menu-cards-container">
+                    <div class="col-12 text-center text-muted p-5">Считывание памяти Антейку...</div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addMenuModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header">
+                    <h5 class="modal-title">Новая запись в книге рецептов</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="menuForm">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <label class="text-muted small">ID Товара</label>
+                                <input type="text" id="m_id" class="form-control" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="text-muted small">Название</label>
+                                <input type="text" id="m_name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Описание</label>
+                            <textarea id="m_desc" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Цена ($)</label>
+                            <input type="number" step="0.01" id="m_price" class="form-control" required>
+                        </div>
+                        <hr class="border-secondary">
+                        <h6 class="text-coffee mb-3">Состав (Ингредиенты)</h6>
+                        <div id="ingredients-container"></div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary mt-2"
+                            onclick="addIngredientRow('ingredients-container')">+ Компонент</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-anteiku" onclick="submitMenu()">Внести в меню</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="editMenuModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="font-family: 'Cinzel', serif; color: var(--accent-coffee);">Изменение
+                        рецептуры</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editMenuForm">
+                        <input type="hidden" id="edit_m_id">
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-12">
+                                <label class="text-muted small">Название напитка</label>
+                                <input type="text" id="edit_m_name" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Описание</label>
+                            <textarea id="edit_m_desc" class="form-control" rows="2"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="text-muted small">Цена ($)</label>
+                            <input type="number" step="0.01" id="edit_m_price" class="form-control" required>
+                        </div>
+                        <hr class="border-secondary">
+                        <h6 class="text-coffee mb-3">Состав</h6>
+                        <div id="edit-ingredients-container"></div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary mt-2"
+                            onclick="addIngredientRow('edit-ingredients-container')">+ Компонент</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-anteiku" onclick="submitEditMenu()">Сохранить
+                        изменения</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let inventoryList = [];
+        // Функция для открытия модалки с предзаполненными данными
+        async function openEditMenuModal(productId) {
+            try {
+                const res = await fetch(`/menu/${productId}`);
+                const item = await res.json();
+
+                document.getElementById('edit_m_id').value = item.product_id;
+                document.getElementById('edit_m_name').value = item.name;
+                document.getElementById('edit_m_desc').value = item.description;
+                document.getElementById('edit_m_price').value = item.price;
+
+                const container = document.getElementById('edit-ingredients-container');
+                container.innerHTML = '';
+
+                // Заполняем ингредиенты
+                (item.ingredients || []).forEach(ing => {
+                    addIngredientRow('edit-ingredients-container', ing.ingredient_id, ing.quantity);
+                });
+
+                new bootstrap.Modal(document.getElementById('editMenuModal')).show();
+            } catch (e) { alert("Ошибка загрузки данных рецепта"); }
+        }
+
+        // Отправка PUT запроса
+        async function submitEditMenu() {
+            const id = document.getElementById('edit_m_id').value;
+            const rows = document.querySelectorAll('#edit-ingredients-container .ingredient-row');
+            const ingredients = Array.from(rows).map(row => ({
+                ingredient_id: row.querySelector('.ing-id').value,
+                quantity: parseFloat(row.querySelector('.ing-qty').value) || 0
+            }));
+
+            const data = {
+                product_id: id,
+                name: document.getElementById('edit_m_name').value,
+                description: document.getElementById('edit_m_desc').value,
+                price: parseFloat(document.getElementById('edit_m_price').value) || 0,
+                ingredients: ingredients
+            };
+
+            const response = await fetch(`/menu/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('editMenuModal')).hide();
+                loadMenu();
+            } else {
+                const err = await response.json();
+                alert("Ошибка обновления: " + err.error);
+            }
+        }
+
+        // Универсальная функция добавления строки ингредиента (обновите старую)
+        function addIngredientRow(containerId = 'ingredients-container', selectedId = '', qty = '') {
+            const container = document.getElementById(containerId);
+            const row = document.createElement('div');
+            row.className = 'row g-2 mb-2 ingredient-row';
+
+            const options = inventoryList.map(ing =>
+                `<option value="${ing.ingredient_id}" ${ing.ingredient_id === selectedId ? 'selected' : ''}>${ing.name}</option>`
+            ).join('');
+
+            row.innerHTML = `
+        <div class="col-7"><select class="form-select ing-id">${options}</select></div>
+        <div class="col-3"><input type="number" class="form-control ing-qty" value="${qty}" placeholder="Кол-во" required></div>
+        <div class="col-2"><button type="button" class="btn btn-outline-danger w-100" onclick="this.parentElement.parentElement.remove()">×</button></div>`;
+            container.appendChild(row);
+        }
+        async function init() {
+            try {
+                await loadMenu();
+                const res = await fetch('/inventory');
+                inventoryList = await res.json();
+            } catch (e) { console.error("Ошибка инициализации:", e); }
+        }
+
+        async function loadMenu() {
+            try {
+                const res = await fetch('/menu');
+                const items = await res.json();
+                const container = document.getElementById('menu-cards-container');
+                container.innerHTML = '';
+
+                if (!items || items.length === 0) {
+                    container.innerHTML = '<div class="col-12 text-center text-muted p-5">Меню пусто.</div>';
+                    return;
+                }
+
+                items.forEach(item => {
+                    const col = document.createElement('div');
+                    col.className = 'col-md-6 col-lg-4';
+
+                    // Безопасная проверка ингредиентов
+                    const ingsHTML = (item.ingredients || []).map(i =>
+                        `<span class="ing-badge">${i.ingredient_id}: <span style="color:var(--accent-coffee)">${i.quantity}</span></span>`
+                    ).join('');
+
+                    col.innerHTML = `
+                        <div class="card menu-card p-4">
+                            <div class="d-flex justify-content-between">
+                                <h4 class="fw-bold">${item.name}</h4>
+                                <div>
+                <button class="btn btn-link text-info p-0 me-2" style="text-decoration:none" onclick="openEditMenuModal('${item.product_id}')">✎</button>
+                <button class="btn btn-link text-danger p-0" style="text-decoration:none" onclick="deleteItem('${item.product_id}')">×</button>
+            </div>
+                            </div>
+                            <small class="text-muted mb-3 d-inline-block">ID: <span class="item-id">${item.product_id}</span></small>
+                            <p class="menu-description small mb-3">"${item.description || ''}"</p>
+                            <div class="mb-3"><span class="menu-price">$${(item.price || 0).toFixed(2)}</span></div>
+                            <div>${ingsHTML}</div>
+                        </div>`;
+                    container.appendChild(col);
+                });
+            } catch (e) {
+                console.error("Ошибка загрузки меню:", e);
+                document.getElementById('menu-cards-container').innerHTML = "Ошибка связи с Антейку";
+            }
+        }
+
+        function prepareModal() {
+            document.getElementById('ingredients-container').innerHTML = '';
+            addIngredientRow();
+        }
+
+        function addIngredientRow(containerId, selectedId = '', qty = '') {
+            // Если containerId не передан (например, при клике из HTML), 
+            // по умолчанию используем форму добавления нового рецепта
+            const targetId = (typeof containerId === 'string') ? containerId : 'ingredients-container';
+            const container = document.getElementById(targetId);
+
+            if (!container) {
+                console.error("Ошибка Антейку: Контейнер " + targetId + " не найден в DOM");
+                return;
+            }
+
+            // Проверка: загрузились ли данные от Йомо со склада
+            if (inventoryList.length === 0) {
+                alert("Тоука: Подожди, данные со склада еще не получены!");
+                return;
+            }
+
+            const row = document.createElement('div');
+            row.className = 'row g-2 mb-2 ingredient-row';
+
+            const options = inventoryList.map(ing =>
+                `<option value="${ing.ingredient_id}" ${ing.ingredient_id === selectedId ? 'selected' : ''}>
+            ${ing.name} (${ing.unit})
+        </option>`
+            ).join('');
+
+            row.innerHTML = `
+        <div class="col-7">
+            <select class="form-select ing-id bg-dark text-white border-secondary">${options}</select>
+        </div>
+        <div class="col-3">
+            <input type="number" class="form-control ing-qty bg-dark text-white border-secondary" 
+                   value="${qty}" placeholder="Кол-во" required>
+        </div>
+        <div class="col-2">
+            <button type="button" class="btn btn-outline-danger w-100" onclick="this.parentElement.parentElement.remove()">×</button>
+        </div>
+    `;
+            container.appendChild(row);
+        }
+        async function submitMenu() {
+            const rows = document.querySelectorAll('.ingredient-row');
+            const ingredients = Array.from(rows).map(row => ({
+                ingredient_id: row.querySelector('.ing-id').value,
+                quantity: parseFloat(row.querySelector('.ing-qty').value) || 0
+            }));
+
+            const data = {
+                product_id: document.getElementById('m_id').value,
+                name: document.getElementById('m_name').value,
+                description: document.getElementById('m_desc').value,
+                price: parseFloat(document.getElementById('m_price').value) || 0,
+                ingredients: ingredients
+            };
+
+            const response = await fetch('/menu', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                const modalEl = document.getElementById('addMenuModal');
+                bootstrap.Modal.getInstance(modalEl).hide();
+                loadMenu();
+                document.getElementById('menuForm').reset();
+            } else {
+                const err = await response.json();
+                alert("Ошибка: " + err.error);
+            }
+        }
+
+        async function deleteItem(id) {
+            if (!confirm(`Убрать "${id}" из меню?`)) return;
+            const res = await fetch(`/menu/${id}`, { method: 'DELETE' });
+            if (res.ok) loadMenu();
+        }
+        async function openEditMenuModal(productId) {
+            try {
+                const res = await fetch(`/menu/${productId}`);
+                if (!res.ok) throw new Error("Товар не найден");
+                const item = await res.json();
+
+                // Заполняем основные поля
+                document.getElementById('edit_m_id').value = item.product_id;
+                document.getElementById('edit_m_name').value = item.name;
+                document.getElementById('edit_m_desc').value = item.description;
+                document.getElementById('edit_m_price').value = item.price;
+
+                // Очищаем и заполняем ингредиенты
+                const container = document.getElementById('edit-ingredients-container');
+                container.innerHTML = '';
+
+                if (item.ingredients && item.ingredients.length > 0) {
+                    item.ingredients.forEach(ing => {
+                        // Вызываем нашу функцию, указывая куда именно добавлять строки
+                        addIngredientRow('edit-ingredients-container', ing.ingredient_id, ing.quantity);
+                    });
+                } else {
+                    // Если ингредиентов нет, добавляем одну пустую строку
+                    addIngredientRow('edit-ingredients-container');
+                }
+
+                const modal = new bootstrap.Modal(document.getElementById('editMenuModal'));
+                modal.show();
+            } catch (e) {
+                alert("Менеджер Йошимура сообщает: " + e.message);
+            }
+        }
+        window.onload = init;
+    </script>
+</body>
+
+</html>

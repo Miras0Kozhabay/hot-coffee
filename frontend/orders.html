@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anteiku - Заказы</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto+Mono:wght@300;400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #0a0a0c;
+            --bg-panel: #14141a;
+            --text-primary: #e0e0e0;
+            --text-muted: #adb5bd;
+            --accent-red: #8f0e0e;
+            --accent-red-glow: #ff3c3c;
+            --accent-coffee: #c7a17a;
+            --border-color: #2a2a35;
+            --status-open: #ffd700;
+            /* Золотой/Кофейный */
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Roboto Mono', monospace;
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        .brand-logo {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-coffee);
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* Сайдбар */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 20px 0;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-red);
+            text-shadow: 0 0 10px rgba(143, 14, 14, 0.5);
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            padding: 15px 25px;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            font-family: 'Cinzel', serif;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-link.active {
+            color: var(--accent-red-glow);
+            border-left-color: var(--accent-red);
+            background: linear-gradient(90deg, rgba(143, 14, 14, 0.1) 0%, transparent 100%);
+        }
+
+        /* Профиль Канеки */
+        .character-profile {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid var(--accent-red);
+            box-shadow: 0 0 15px rgba(143, 14, 14, 0.4);
+        }
+
+        .char-name {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-coffee);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .char-role {
+            font-size: 0.8rem;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Контент */
+        .main-content {
+            margin-left: 250px;
+            padding: 40px;
+        }
+
+        .separator-line {
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-red), transparent);
+            margin: 20px 0 40px 0;
+            opacity: 0.5;
+        }
+
+        /* Стили таблицы заказов */
+        .card {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-color);
+        }
+
+        .table {
+            color: var(--text-primary);
+            --bs-table-bg: transparent;
+            --bs-table-border-color: var(--border-color);
+        }
+
+        .order-id {
+            color: var(--accent-red-glow);
+            background: rgba(143, 14, 14, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+        }
+
+        /* Бейджики напитков в заказе */
+        .item-badge {
+            background-color: rgba(199, 161, 122, 0.1);
+            border: 1px solid rgba(199, 161, 122, 0.3);
+            color: var(--accent-coffee);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 5px;
+        }
+
+        /* Статусы */
+        .status-open {
+            color: var(--status-open);
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+
+        .status-closed {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+        }
+
+        .btn-anteiku-close {
+            background-color: transparent;
+            border: 1px solid var(--accent-coffee);
+            color: var(--accent-coffee);
+            transition: all 0.3s;
+            font-family: 'Cinzel', serif;
+            font-size: 0.75rem;
+        }
+
+        .btn-anteiku-close:hover {
+            background-color: var(--accent-coffee);
+            color: #000;
+            box-shadow: 0 0 10px var(--accent-coffee);
+        }
+
+        /* Темный стиль для всех модальных окон */
+        .modal-content {
+            background-color: var(--bg-panel) !important;
+            border: 1px solid var(--accent-red) !important;
+            color: var(--text-primary) !important;
+            box-shadow: 0 0 20px rgba(143, 14, 14, 0.3) !important;
+        }
+
+        .modal-header,
+        .modal-footer {
+            border-color: var(--border-color) !important;
+        }
+
+        /* Стилизация полей ввода и списков */
+        .form-control,
+        .form-select {
+            background-color: var(--bg-main) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            background-color: #1a1a22 !important;
+            color: #ffffff !important;
+            border-color: var(--accent-red-glow) !important;
+            box-shadow: 0 0 10px rgba(255, 60, 60, 0.2) !important;
+        }
+
+        /* Кнопка закрытия (крестик) */
+        .btn-close-white {
+            filter: invert(1) grayscale(1) brightness(2);
+        }
+
+        /* Стиль для выпадающего списка в заказе */
+        .item-id {
+            font-weight: bold;
+            color: var(--accent-coffee);
+        }
+
+        /* Общие настройки для кнопок */
+        .btn-anteiku,
+        .btn-order-highlight {
+            text-transform: none !important;
+            /* Убираем заглавные буквы */
+            letter-spacing: 1px;
+            font-family: 'Roboto Mono', monospace;
+            /* Более спокойный шрифт для кнопок */
+        }
+
+        /* Кнопка "Оформить заказ" */
+        .btn-order-highlight {
+            background-color: var(--accent-red) !important;
+            color: white !important;
+            border: none !important;
+            padding: 10px 25px;
+            box-shadow: 0 0 15px rgba(143, 14, 14, 0.4);
+            transition: all 0.3s;
+        }
+
+        /* Квадратные кнопки действий в таблице */
+        .btn-action-square {
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 !important;
+            font-size: 1.1rem;
+            line-height: 1;
+            text-transform: none !important;
+        }
+
+        /* Кнопка "+ Новый гость" (делаем её того же стиля, что и остальные) */
+        .btn-anteiku {
+            border: 1px solid var(--accent-red);
+            color: var(--text-primary);
+            padding: 8px 20px;
+        }
+
+        /* Единый стиль логотипа для всех страниц */
+        .logo-link {
+            text-decoration: none !important;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo {
+            font-family: 'Cinzel', serif;
+            /* Принудительно задаем шрифт */
+            font-size: 1.8rem;
+            font-weight: 700;
+            /* Жирный шрифт */
+            color: var(--accent-red) !important;
+            text-shadow: 0 0 10px rgba(143, 14, 14, 0.5);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .logo-link:hover .brand-logo {
+            color: var(--accent-red-glow) !important;
+            text-shadow: 0 0 20px var(--accent-red-glow);
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div>
+                    <div class="brand-section pt-3">
+                        <a href="/" class="logo-link">
+                            <div class="brand-logo">☕ ANTEIKU</div>
+                        </a>
+                        <small class="text-muted">Система управления</small>
+                    </div>
+                    <ul class="nav flex-column mt-4">
+                        <li class="nav-item"><a class="nav-link" href="/inventory.html">📦 Склад</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/menu.html">📜 Меню</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/orders.html">🔔 Заказы</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/reports.html">📈 Отчеты</a></li>
+                    </ul>
+                </div>
+
+                <div class="character-profile">
+                    <img src="/kaneki.jpg" alt="Ken Kaneki" class="avatar"
+                        onerror="this.src='https://via.placeholder.com/80/14141a/ff3c3c?text=KK'">
+                    <p class="char-name">Кен Канеки</p>
+                    <p class="char-role">Официант / Кассир</p>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3">
+                    <h1 class="h2">Журнал обслуживания</h1>
+                    <button class="btn btn-sm btn-anteiku" data-bs-toggle="modal" data-bs-target="#addOrderModal"
+                        onclick="prepareOrderModal()">
+                        + Новый гость
+                    </button>
+                </div>
+                <div class="separator-line"></div>
+
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="ps-4">Код чека</th>
+                                        <th>Гость</th>
+                                        <th>Заказ</th>
+                                        <th>Время</th>
+                                        <th>Состояние</th>
+                                        <th class="text-end pe-4">Действие</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-table-body">
+                                    <tr>
+                                        <td colspan="6" class="text-center p-5 text-muted">Считывание данных из
+                                            памяти...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <div class="modal fade" id="addOrderModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="font-family: 'Cinzel', serif; color: var(--accent-coffee);">Новый
+                        гость в Антейку</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="orderForm">
+                        <div class="mb-3">
+                            <label class="text-muted small">Имя посетителя</label>
+                            <input type="text" id="order_customer" class="form-control" placeholder="Напр. Хинами"
+                                required>
+                        </div>
+
+                        <hr class="border-secondary">
+                        <h6 class="text-coffee mb-3">Список позиций</h6>
+                        <div id="order-items-container">
+                        </div>
+                        <button type="button" class="btn btn-sm btn-outline-secondary mt-2"
+                            onclick="addOrderItemRow()">+ Добавить напиток</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                        data-bs-dismiss="modal">Отмена</button>
+
+                    <button type="button" class="btn btn-order-highlight" onclick="submitOrder()">
+                        Оформить заказ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editOrderModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content shadow-lg">
+                <div class="modal-header">
+                    <h5 class="modal-title" style="font-family: 'Cinzel', serif; color: var(--accent-coffee);">Изменение
+                        заказа</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="edit_order_id">
+                    <div class="mb-3">
+                        <label class="text-muted small">Имя посетителя</label>
+                        <input type="text" id="edit_order_customer" class="form-control" required>
+                    </div>
+                    <hr class="border-secondary">
+                    <h6 class="text-coffee mb-3">Список позиций</h6>
+                    <div id="edit-order-items-container"></div>
+                    <button type="button" class="btn btn-sm btn-outline-secondary mt-2"
+                        onclick="addOrderItemRow('edit-order-items-container')">+ Добавить напиток</button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                        data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn btn-order-highlight" onclick="submitEditOrder()">Сохранить
+                        изменения</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let menuList = [];
+
+        async function initOrders() {
+            try {
+                const res = await fetch('/menu');
+                if (!res.ok) throw new Error("Сервер не отдал меню");
+                menuList = await res.json();
+                await loadOrders();
+            } catch (e) {
+                console.error("Ошибка инициализации:", e);
+                alert("Ошибка связи с бэкендом.");
+            }
+        }
+
+        // ИСПРАВЛЕНО: Добавлен параметр containerId первым в списке
+        function addOrderItemRow(containerId = 'order-items-container', productId = '', qty = 1) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            if (menuList.length === 0) {
+                fetch('/menu').then(res => res.json()).then(data => {
+                    menuList = data;
+                    renderRow(container, productId, qty);
+                });
+                return;
+            }
+            renderRow(container, productId, qty);
+        }
+
+        function renderRow(container, productId, qty) {
+            const row = document.createElement('div');
+            row.className = 'row g-2 mb-2 order-item-row';
+            const options = menuList.map(item =>
+                `<option value="${item.product_id}" ${item.product_id === productId ? 'selected' : ''}>
+                ${item.name} ($${(item.price || 0).toFixed(2)})
+            </option>`
+            ).join('');
+
+            row.innerHTML = `
+            <div class="col-7"><select class="form-select item-id">${options}</select></div>
+            <div class="col-3"><input type="number" class="form-control item-qty" value="${qty}" min="1"></div>
+            <div class="col-2"><button type="button" class="btn btn-outline-danger w-100" onclick="this.parentElement.parentElement.remove()">×</button></div>
+        `;
+            container.appendChild(row);
+        }
+
+        async function submitOrder() {
+            const rows = document.querySelectorAll('#order-items-container .order-item-row');
+            const items = Array.from(rows).map(row => ({
+                product_id: row.querySelector('.item-id').value,
+                quantity: parseInt(row.querySelector('.item-qty').value)
+            }));
+
+            const data = {
+                customer_name: document.getElementById('order_customer').value,
+                items: items
+            };
+
+            const res = await fetch('/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('addOrderModal')).hide();
+                loadOrders();
+                document.getElementById('orderForm').reset();
+            } else {
+                const err = await res.json();
+                alert("Ошибка заказа: " + err.error);
+            }
+        }
+
+        async function changeOrderStatus(id, newStatus) {
+            if (newStatus === 'closed') {
+                if (!confirm('Подать заказ гостю?')) return;
+                try {
+                    const response = await fetch(`/orders/${id}/close`, { method: 'POST' });
+                    if (response.ok) loadOrders();
+                    else {
+                        const err = await response.json();
+                        alert('Ошибка: ' + err.error);
+                    }
+                } catch (e) { alert('Ошибка сети'); }
+            }
+        }
+
+        async function deleteOrder(id) {
+            if (!confirm("Удалить запись о заказе из журнала?")) return;
+            const res = await fetch(`/orders/${id}`, { method: 'DELETE' });
+            if (res.ok) loadOrders();
+        }
+
+        async function openEditOrder(id, name) {
+            document.getElementById('edit_order_id').value = id;
+            document.getElementById('edit_order_customer').value = name;
+
+            const res = await fetch(`/orders/${id}`);
+            const order = await res.json();
+
+            const container = document.getElementById('edit-order-items-container');
+            container.innerHTML = '';
+
+            if (order.items && order.items.length > 0) {
+                order.items.forEach(item => {
+                    // ИСПРАВЛЕНО: Теперь аргументы передаются в правильном порядке
+                    addOrderItemRow('edit-order-items-container', item.product_id, item.quantity);
+                });
+            }
+
+            new bootstrap.Modal(document.getElementById('editOrderModal')).show();
+        }
+
+        async function submitEditOrder() {
+            const id = document.getElementById('edit_order_id').value;
+            const rows = document.querySelectorAll('#edit-order-items-container .order-item-row');
+
+            const items = Array.from(rows).map(row => ({
+                product_id: row.querySelector('.item-id').value,
+                quantity: parseInt(row.querySelector('.item-qty').value)
+            }));
+
+            const data = {
+                order_id: id,
+                customer_name: document.getElementById('edit_order_customer').value,
+                items: items,
+                status: 'open' // ДОБАВЬТЕ ЭТУ СТРОКУ
+            };
+
+            const res = await fetch(`/orders/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                bootstrap.Modal.getInstance(document.getElementById('editOrderModal')).hide();
+                loadOrders();
+            } else {
+                const err = await res.json();
+                alert("Update failed: " + err.error);
+            }
+        }
+
+        function prepareOrderModal() {
+            document.getElementById('order_customer').value = '';
+            const container = document.getElementById('order-items-container');
+            container.innerHTML = '';
+            // ИСПРАВЛЕНО: Явно передаем ID контейнера
+            addOrderItemRow('order-items-container');
+        }
+
+        async function loadOrders() {
+            try {
+                const response = await fetch('/orders');
+                const orders = await response.json();
+                const tbody = document.getElementById('orders-table-body');
+                tbody.innerHTML = '';
+
+                if (!orders || orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center p-5 text-muted">В кофейне пока нет посетителей.</td></tr>';
+                    return;
+                }
+
+                orders.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+                orders.forEach(order => {
+                    const tr = document.createElement('tr');
+                    const isOpen = order.status === 'open';
+
+                    const itemsHTML = (order.items || []).map(item =>
+                        `<span class="item-badge">${item.product_id} <span class="text-white">x${item.quantity}</span></span>`
+                    ).join('');
+
+                    const dateObj = new Date(order.created_at);
+                    const date = isNaN(dateObj.getTime()) ? "ошибка даты" : new Intl.DateTimeFormat('ru-RU', {
+                        day: '2-digit', month: '2-digit', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit', timeZone: 'UTC'
+                    }).format(dateObj);
+
+                    let statusHTML = '';
+                    if (order.status === 'open') {
+                        statusHTML = `<span class="status-open">● в процессе</span>`;
+                    } else if (order.status === 'closed') {
+                        statusHTML = `<span class="status-closed">✓ завершен</span>`;
+                    } else {
+                        statusHTML = `<span class="text-danger">! ошибка статуса</span>`;
+                    }
+
+                    let actionsHTML = '';
+                    let deleteButton = '';
+
+                    if (isOpen) {
+                        actionsHTML = `
+                        <button class="btn btn-action-square btn-outline-success me-1" title="Подать кофе" onclick="changeOrderStatus('${order.order_id}', 'closed')">✓</button>
+                        <button class="btn btn-action-square btn-outline-info me-1" title="Изменить" onclick="openEditOrder('${order.order_id}', '${order.customer_name}')">✎</button>
+                    `;
+                        deleteButton = `<button class="btn btn-action-square btn-outline-danger" title="Удалить" onclick="deleteOrder('${order.order_id}')">×</button>`;
+                    } else {
+                        actionsHTML = `<span class="text-muted small me-2">оплачен</span>`;
+                    }
+
+                    tr.innerHTML = `
+                    <td class="ps-4"><span class="order-id">${order.order_id}</span></td>
+                    <td class="fw-bold" style="color: var(--accent-coffee)">${order.customer_name}</td>
+                    <td>${itemsHTML}</td>
+                    <td class="text-muted small">${date}</td>
+                    <td>${statusHTML}</td>
+                    <td class="text-end pe-4">
+                        <div class="d-flex justify-content-end align-items-center">
+                            ${actionsHTML}
+                            ${deleteButton}
+                        </div>
+                    </td>
+                `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                console.error("Ошибка:", error);
+                document.getElementById('orders-table-body').innerHTML = '<tr><td colspan="6" class="text-center p-5 text-danger">ошибка терминала.</td></tr>';
+            }
+        }
+
+        window.onload = initOrders;
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

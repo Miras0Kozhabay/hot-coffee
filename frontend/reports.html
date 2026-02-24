@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anteiku - Отчеты</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto+Mono:wght@300;400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-main: #0a0a0c;
+            --bg-panel: #14141a;
+            --text-primary: #e0e0e0;
+            --text-muted: #adb5bd;
+            /* Светло-серебристый для читаемости */
+            --accent-red: #8f0e0e;
+            --accent-red-glow: #ff3c3c;
+            --accent-coffee: #c7a17a;
+            --border-color: #2a2a35;
+            --success-green: #2ecc71;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'Roboto Mono', monospace;
+            background-image: url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
+            min-height: 100vh;
+        }
+
+        h1,
+        h2,
+        h3,
+        .brand-logo {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-coffee);
+            letter-spacing: 2px;
+        }
+
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+
+        /* Сайдбар */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            padding: 20px 0;
+            background-color: var(--bg-panel);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .brand-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--accent-red);
+            text-shadow: 0 0 10px rgba(143, 14, 14, 0.5);
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            padding: 15px 25px;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            font-family: 'Cinzel', serif;
+        }
+
+        .nav-link:hover {
+            color: var(--text-primary);
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .nav-link.active {
+            color: var(--accent-red-glow);
+            border-left-color: var(--accent-red);
+            background: linear-gradient(90deg, rgba(143, 14, 14, 0.1) 0%, transparent 100%);
+        }
+
+        /* Профиль Йошимуры */
+        .character-profile {
+            padding: 20px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid var(--accent-red);
+            box-shadow: 0 0 15px rgba(143, 14, 14, 0.4);
+        }
+
+        .char-name {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-coffee);
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .char-role {
+            font-size: 0.8rem;
+            color: var(--accent-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Контент */
+        .main-content {
+            margin-left: 250px;
+            padding: 40px;
+        }
+
+        .separator-line {
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-red), transparent);
+            margin: 20px 0 40px 0;
+            opacity: 0.5;
+        }
+
+        /* Карточки аналитики */
+        .stat-card {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-color);
+            border-top: 3px solid var(--accent-coffee);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            height: 100%;
+        }
+
+        .revenue-display {
+            font-size: 3.5rem;
+            color: var(--success-green);
+            text-shadow: 0 0 20px rgba(46, 204, 113, 0.2);
+            font-family: 'Cinzel', serif;
+            margin: 20px 0;
+        }
+
+        .table {
+            color: var(--text-primary);
+            --bs-table-bg: transparent;
+            --bs-table-border-color: var(--border-color);
+        }
+
+        .table thead th {
+            color: var(--text-muted);
+            font-weight: normal;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .popular-badge {
+            background: rgba(199, 161, 122, 0.15);
+            color: var(--accent-coffee);
+            border: 1px solid var(--accent-coffee);
+            font-family: 'Roboto Mono', monospace;
+            padding: 5px 12px;
+        }
+
+        .quote-box {
+            font-style: italic;
+            color: var(--text-muted);
+            border-left: 2px solid var(--accent-red);
+            padding-left: 15px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+
+        /* Единый стиль логотипа для всех страниц */
+        .logo-link {
+            text-decoration: none !important;
+            display: block;
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo {
+            font-family: 'Cinzel', serif;
+            /* Принудительно задаем шрифт */
+            font-size: 1.8rem;
+            font-weight: 700;
+            /* Жирный шрифт */
+            color: var(--accent-red) !important;
+            text-shadow: 0 0 10px rgba(143, 14, 14, 0.5);
+            margin: 0;
+            line-height: 1.2;
+        }
+
+        .logo-link:hover .brand-logo {
+            color: var(--accent-red-glow) !important;
+            text-shadow: 0 0 20px var(--accent-red-glow);
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+                <div>
+                    <div class="brand-section pt-3">
+                        <a href="/" class="logo-link">
+                            <div class="brand-logo">☕ ANTEIKU</div>
+                        </a>
+                        <small class="text-muted">Система управления</small>
+                    </div>
+                    <ul class="nav flex-column mt-4">
+                        <li class="nav-item"><a class="nav-link" href="/inventory.html">📦 Склад</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/menu.html">📜 Меню</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/orders.html">🔔 Заказы</a></li>
+                        <li class="nav-item"><a class="nav-link active" href="/reports.html">📈 Отчеты</a></li>
+                    </ul>
+                </div>
+
+                <div class="character-profile">
+                    <img src="/yoshimura.jpg" alt="Yoshimura" class="avatar"
+                        onerror="this.src='https://via.placeholder.com/80/14141a/ff3c3c?text=Y'">
+                    <p class="char-name">Кузен Йошимура</p>
+                    <p class="char-role">Управляющий</p>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between align-items-center pt-3 pb-2 mb-3">
+                    <h1 class="h2">Финансовый отчет</h1>
+                </div>
+                <div class="separator-line"></div>
+
+                <div class="row g-4">
+                    <div class="col-xl-4 col-md-5">
+                        <div class="card stat-card p-4 text-center">
+                            <h6 class="text-muted text-uppercase fw-light mb-2">Общая выручка</h6>
+                            <div class="revenue-display" id="total-sales-val">$0.00</div>
+                            <div class="quote-box text-start">
+                                "Мы не только гули, мы — те, кто поддерживает баланс в этом районе."
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-8 col-md-7">
+                        <div class="card stat-card p-4">
+                            <h6 class="text-muted text-uppercase fw-light mb-4">Популярность сортов кофе</h6>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead>
+                                        <tr>
+                                            <th>Ранг</th>
+                                            <th>Наименование</th>
+                                            <th class="text-end">Продано порций</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="popular-items-table">
+                                        <tr>
+                                            <td colspan="3" class="text-center p-5 text-muted">Сбор данных...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        async function initReports() {
+            try {
+                // Загружаем данные параллельно
+                const [salesRes, popularRes] = await Promise.all([
+                    fetch('/reports/total-sales'),
+                    fetch('/reports/popular-items')
+                ]);
+
+                if (salesRes.ok) {
+                    const salesData = await salesRes.json();
+                    document.getElementById('total-sales-val').innerText =
+                        '$' + (salesData.total_sales || 0).toFixed(2);
+                }
+
+                if (popularRes.ok) {
+                    const popularData = await popularRes.json();
+                    const tbody = document.getElementById('popular-items-table');
+                    tbody.innerHTML = '';
+
+                    if (!popularData || popularData.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="3" class="text-center p-5 text-muted">Информации о продажах пока нет.</td></tr>';
+                        return;
+                    }
+
+                    popularData.forEach((item, index) => {
+                        const tr = document.createElement('tr');
+                        // Золотой, серебряный и бронзовый акценты для топ-3
+                        let rankStyle = 'color: var(--text-muted)';
+                        if (index === 0) rankStyle = 'color: #ffd700; font-weight: bold;';
+                        if (index === 1) rankStyle = 'color: #c0c0c0; font-weight: bold;';
+                        if (index === 2) rankStyle = 'color: #cd7f32; font-weight: bold;';
+
+                        tr.innerHTML = `
+                        <td style="${rankStyle}">#${index + 1}</td>
+                        <td class="fw-bold" style="color: var(--accent-coffee)">${item.name}</td>
+                        <td class="text-end"><span class="badge popular-badge">${item.total_ordered}</span></td>
+                    `;
+                        tbody.appendChild(tr);
+                    });
+                }
+            } catch (error) {
+                console.error('Ошибка аналитики:', error);
+            }
+        }
+
+        window.onload = initReports;
+    </script>
+
+</body>
+
+</html>
