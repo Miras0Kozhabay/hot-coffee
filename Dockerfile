@@ -9,7 +9,7 @@
     COPY . .
     
     # билдим именно cmd
-    RUN CGO_ENABLED=0 GOOS=linux go build -o hot-coffee ./cmd
+    RUN CGO_ENABLED=0 GOOS=linux go build -o hot-coffee 
     
     # ---------- Stage 2: Runtime ----------
     FROM alpine:latest
