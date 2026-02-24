@@ -17,17 +17,14 @@ import (
 )
 
 func main() {
-	// Парсим флаги 
-	port := flag.String("port", "8080", "")
-	dir := flag.String("dir", "data", "")
-	flag.Usage = func() {
-		utils.PrintHelp()
-	}
-	flag.Parse()
+	cfg, err := utils.Load()
+	 if err != nil {
+		slog.Error("Failed to load configurations", "error", err)
+	 }
 
-	invRepo := dal.NewInventoryRepository(*dir)
-	menuRepo := dal.NewMenuRepository(*dir)
-	orderRepo := dal.NewOrderRepository(*dir)
+	invRepo := dal.NewInventoryRepository(cfg.DataDir)
+	menuRepo := dal.NewMenuRepository(cfg.DataDir)
+	orderRepo := dal.NewOrderRepository(cfg.DataDir)
 
 	invService := service.NewInventoryService(invRepo)
 	menuService := service.NewMenuService(menuRepo)
@@ -45,12 +42,12 @@ func main() {
 	fileServer := http.FileServer(http.Dir("./frontend"))
 	mux.Handle("/", fileServer)
 	srv := &http.Server{
-		Addr:    ":" + *port,
+		Addr:    ":" + cfg.Port,
 		Handler: mux,
 	}
 	go func() {
-		fmt.Printf("starting server on port %s...\n", *port)
-		fmt.Printf("dir is %s...\n", *dir)
+		fmt.Printf("starting server on port %s...\n", cfg.Port)
+		fmt.Printf("dir is %s...\n", cfg.DataDir)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)
 		}

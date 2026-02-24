@@ -1,0 +1,21 @@
+# Git
+.git
+.gitignore
+
+# Документация
+README.md
+*.md
+
+# Тестовые файлы
+*_test.go
+
+# Локальные данные (если не хотите включать в образ)
+# data/
+
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
