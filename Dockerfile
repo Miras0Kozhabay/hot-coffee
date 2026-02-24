@@ -1,7 +1,7 @@
 # Этап 1: Сборка
 FROM golang:1.22-alpine AS builder
 # Устанавливаем рабочую директорию
-WORKDIR /app
+WORKDIR /cmd
 # Копируем go.mod и go.sum (если есть)
 COPY go.mod go.sum* ./
 # Скачиваем зависимости
