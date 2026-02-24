@@ -40,6 +40,7 @@ func main() {
 	handler.RegisterRoutes(mux, invHandler, menuHandler, orderHandler, agrHandler)
 	// Запуск серверa
 	fileServer := http.FileServer(http.Dir("./frontend"))
+	fmt.Println(fileServer)
 	mux.Handle("/", fileServer)
 	srv := &http.Server{
 		Addr:    ":" + cfg.Port,
