@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 )
 const helpText = `Coffee Shop Management System
 
@@ -42,7 +43,7 @@ func Load() (*Config, error) {
 	if portInt < 1 || portInt > 65535 {
 		return nil, fmt.Errorf("invalid port number %d, must be between 1 and 65535", portInt)
 	}
-	portStr := strconv.Itoa(portInt) 
+	port = strconv.Itoa(portInt) 
 	if err := os.MkdirAll(dataDir, 0o755); err != nil {
 		return nil, fmt.Errorf("failed to create data directory '%s': %w", dataDir, err)
 	}
