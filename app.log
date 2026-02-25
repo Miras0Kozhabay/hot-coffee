@@ -1,0 +1,84 @@
+time="2026-02-25T18:05:48+05:00" level=info msg="Application is starting" event=application_start
+time="2026-02-25T18:22:10+05:00" level=info msg="Application is starting:"
+time="2026-02-25T19:04:10+05:00" level=info msg="Application is starting:"
+time="2026-02-25T19:04:27+05:00" level=error msg="Failed to create menu item" error="price must be greater than zero"
+time="2026-02-25T19:06:17+05:00" level=info msg="Inventory item updated" ingredientID=espresso_shot
+time="2026-02-25T19:33:08+05:00" level=info msg="Server exiting"
+time="2026-02-25T19:33:12+05:00" level=info msg="Application is starting:"
+time="2026-02-25T19:33:15+05:00" level=info msg="Menu retrieved" itemsCount=5
+time="2026-02-25T19:33:38+05:00" level=info msg="Inventory item updated" ingredientID=espresso_shot
+time="2026-02-25T19:33:38+05:00" level=info msg="Inventory item updated" ingredientID=espresso_shot
+time="2026-02-25T19:33:45+05:00" level=info msg="Menu retrieved" itemsCount=5
+time="2026-02-25T19:33:54+05:00" level=info msg="Menu item deleted" menuItemID=human_milk
+time="2026-02-25T19:33:54+05:00" level=info msg="Menu item deleted" menuItemID=human_milk
+time="2026-02-25T19:33:54+05:00" level=info msg="Menu item deleted" menuItemID=human_milk
+time="2026-02-25T19:33:54+05:00" level=info msg="Menu retrieved" itemsCount=4
+time="2026-02-25T19:34:44+05:00" level=info msg="Menu retrieved" itemsCount=4
+time="2026-02-25T19:35:12+05:00" level=error msg="Insufficient stock for ingredient" availableQty=100 ingredientID=salt requiredQty=111
+time="2026-02-25T19:35:12+05:00" level=error msg="Order creation failed" error="insufficient stock for 'Salt': required 111.00, available 100.00"
+time="2026-02-25T19:35:20+05:00" level=info msg="Menu retrieved" itemsCount=4
+time="2026-02-25T19:35:23+05:00" level=info msg="Menu item retrieved" menuItemID=muffin
+time="2026-02-25T19:35:31+05:00" level=info msg="Menu item updated" menuItemID=muffin name="Blueberry Muffin"
+time="2026-02-25T19:35:31+05:00" level=info msg="Menu item updated" menuItemID=muffin
+time="2026-02-25T19:35:31+05:00" level=info msg="Menu retrieved" itemsCount=4
+time="2026-02-25T19:35:42+05:00" level=info msg="Menu retrieved" itemsCount=4
+time="2026-02-25T19:35:54+05:00" level=info msg="Order created" customerName=Nagato orderID=order-1772030154993
+time="2026-02-25T19:35:54+05:00" level=info msg="Order created" orderID=order-1772030154993
+time="2026-02-25T19:36:04+05:00" level=info msg="Order retrieved" orderID=order-1772030154993
+time="2026-02-25T19:36:15+05:00" level=info msg="Inventory updated (return) for order" orderID=order-1772030154993
+time="2026-02-25T19:36:15+05:00" level=info msg="Inventory updated for order" orderID=order-1772030154993
+time="2026-02-25T19:36:15+05:00" level=info msg="Order updated" orderID=order-1772030154993
+time="2026-02-25T19:36:15+05:00" level=info msg="Order updated" orderID=order-1772030154993
+time="2026-02-25T19:36:20+05:00" level=info msg="Inventory updated (return) for order" orderID=order-1772030154993
+time="2026-02-25T19:36:20+05:00" level=info msg="Order deleted" orderID=order-1772030154993
+time="2026-02-25T19:36:20+05:00" level=info msg="Order deleted" orderID=order-1772030154993
+time="2026-02-25T19:36:36+05:00" level=info msg="Order created" customerName=Nagato orderID=order-1772030196990
+time="2026-02-25T19:36:36+05:00" level=info msg="Order created" orderID=order-1772030196990
+time="2026-02-25T19:36:44+05:00" level=info msg="Order closed" orderID=order-1772030196990
+time="2026-02-25T19:36:44+05:00" level=info msg="Order closed" orderID=order-1772030196990
+time="2026-02-25T19:43:15+05:00" level=info msg="Server exiting"
+time="2026-02-25T19:43:19+05:00" level=info msg="Application is starting:"
+time="2026-02-25T19:44:12+05:00" level=info msg="Creating inventory item" item="{Bananaaa Banana 24 шт}"
+time="2026-02-25T19:44:12+05:00" level=info msg="Inventory item added" ingredientID=Bananaaa name=Banana
+time="2026-02-25T19:44:12+05:00" level=info msg="Inventory item added" ingredientID=Bananaaa
+time="2026-02-25T19:44:18+05:00" level=error msg="Attempt to add inventory item with missing ingredient ID" ingredientID=
+time="2026-02-25T19:44:18+05:00" level=error msg="Failed to add inventory item" error="ingredient_id is required"
+time="2026-02-25T19:44:50+05:00" level=error msg="Attempt to add inventory item with missing name" ingredientID=Ice
+time="2026-02-25T19:44:50+05:00" level=error msg="Failed to add inventory item" error="name is required"
+time="2026-02-25T19:45:04+05:00" level=info msg="Creating inventory item" item="{Ice Ice 0 }"
+time="2026-02-25T19:45:04+05:00" level=info msg="Inventory item added" ingredientID=Ice name=Ice
+time="2026-02-25T19:45:04+05:00" level=info msg="Inventory item added" ingredientID=Ice
+time="2026-02-25T19:45:30+05:00" level=info msg="Inventory item updated" ingredientID=Ice
+time="2026-02-25T19:45:30+05:00" level=info msg="Inventory item updated" ingredientID=Ice
+time="2026-02-25T19:45:39+05:00" level=info msg="Inventory item updated" ingredientID=Ice
+time="2026-02-25T19:45:39+05:00" level=info msg="Inventory item updated" ingredientID=Ice
+time="2026-02-25T19:45:49+05:00" level=info msg="Inventory item deleted" ingredientID=Ice
+time="2026-02-25T19:45:49+05:00" level=info msg="Inventory item deleted" ingredientID=Ice
+time="2026-02-25T19:45:53+05:00" level=info msg="Menu retrieved" itemsCount=4
+time="2026-02-25T19:47:14+05:00" level=error msg="Menu item with this ID already exists" menuItemID=
+time="2026-02-25T19:47:14+05:00" level=error msg="Failed to create menu item" error="menu item with this ID already exists"
+time="2026-02-25T19:47:19+05:00" level=info msg="Menu item created" menuItemID=" " name=miko
+time="2026-02-25T19:47:19+05:00" level=info msg="Menu item created" menuItemID=" "
+time="2026-02-25T19:47:19+05:00" level=info msg="Menu retrieved" itemsCount=5
+time="2026-02-25T19:48:28+05:00" level=error msg="Menu item price must be greater than zero" menuItemID= price=0
+time="2026-02-25T19:48:28+05:00" level=error msg="Failed to create menu item" error="price must be greater than zero"
+time="2026-02-25T19:48:33+05:00" level=error msg="Menu item with this ID already exists" menuItemID=
+time="2026-02-25T19:48:33+05:00" level=error msg="Failed to create menu item" error="menu item with this ID already exists"
+time="2026-02-25T19:48:58+05:00" level=info msg="Menu retrieved" itemsCount=5
+time="2026-02-25T19:49:00+05:00" level=info msg="Menu item retrieved" menuItemID="What Miko Wants"
+time="2026-02-25T19:51:12+05:00" level=info msg="Server exiting"
+time="2026-02-25T19:51:15+05:00" level=info msg="Application is starting:"
+time="2026-02-25T19:51:19+05:00" level=info msg="Menu retrieved" itemsCount=5
+time="2026-02-25T19:52:00+05:00" level=info msg="Menu item created" menuItemID="Welcome Pack" name="Hello Bundle"
+time="2026-02-25T19:52:00+05:00" level=info msg="Menu item created" menuItemID="Welcome Pack"
+time="2026-02-25T19:52:00+05:00" level=info msg="Menu retrieved" itemsCount=6
+time="2026-02-25T19:52:49+05:00" level=info msg="Menu item deleted" menuItemID="Welcome Pack"
+time="2026-02-25T19:52:49+05:00" level=info msg="Menu item deleted" menuItemID="Welcome Pack"
+time="2026-02-25T19:52:49+05:00" level=info msg="Deleting menu item" itemID="Welcome Pack"
+time="2026-02-25T19:52:49+05:00" level=info msg="Menu item deleted" menuItemID="Welcome Pack"
+time="2026-02-25T19:52:49+05:00" level=info msg="Menu retrieved" itemsCount=5
+time="2026-02-25T19:53:03+05:00" level=error msg="Menu item ID cannot be empty" name="Welcome Pack"
+time="2026-02-25T19:53:03+05:00" level=error msg="Failed to create menu item" error="ID cannot be empty"
+time="2026-02-25T19:59:34+05:00" level=info msg="Menu retrieved" itemsCount=5
+time="2026-02-25T20:00:15+05:00" level=info msg="Menu retrieved" itemsCount=5
+time="2026-02-25T20:00:22+05:00" level=info msg="Server exiting"

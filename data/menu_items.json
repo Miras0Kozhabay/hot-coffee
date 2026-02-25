@@ -35,7 +35,7 @@
    },
    {
     "ingredient_id": "salt",
-    "quantity": 111
+    "quantity": 10
    }
   ]
  },
@@ -52,26 +52,38 @@
   ]
  },
  {
-  "product_id": "human_milk",
-  "name": "Brest Milk",
-  "description": "a very pleasant and tasty coffee that you even didn't taste",
-  "price": 10,
+  "product_id": "Great Miko",
+  "name": "For Miko",
+  "description": "",
+  "price": 12,
   "ingredients": [
    {
-    "ingredient_id": "milk",
-    "quantity": 15
-   },
-   {
-    "ingredient_id": "sugar",
-    "quantity": 20
-   },
-   {
     "ingredient_id": "espresso_shot",
-    "quantity": 10
+    "quantity": 4
+   },
+   {
+    "ingredient_id": "flour",
+    "quantity": 25
+   },
+   {
+    "ingredient_id": "water",
+    "quantity": 100
    },
    {
     "ingredient_id": "blueberries",
-    "quantity": 10
+    "quantity": 50
+   }
+  ]
+ },
+ {
+  "product_id": "What Miko Wants",
+  "name": "miko",
+  "description": "",
+  "price": 45,
+  "ingredients": [
+   {
+    "ingredient_id": "espresso_shot",
+    "quantity": 0
    }
   ]
  }

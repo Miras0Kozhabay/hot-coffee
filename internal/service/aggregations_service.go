@@ -3,6 +3,7 @@ package service
 import (
 	"fmt"
 	"hot-coffee/internal/dal"
+	"hot-coffee/internal/logger"
 	"hot-coffee/models"
 )
 
@@ -26,12 +27,14 @@ func NewAggregationService(orderRepo dal.OrderRepository, menuRepo dal.MenuRepos
 func (s *aggregationService) GetTotalSales() (float64, error) {
 	orders, err := s.orderRepo.GetAll()
 	if err != nil {
+		logger.Log.WithError(err).Error("Failed to retrieve orders for total sales calculation")
 		return 0, fmt.Errorf("fetching orders: %w", err)
 
 	}
 
 	menuItems, err := s.menuRepo.GetAll()
 	if err != nil {
+		logger.Log.WithError(err).Error("Failed to retrieve menu items for total sales calculation")
 		return 0, fmt.Errorf("fetching menuu items: %w", err)
 	}
 
@@ -58,11 +61,13 @@ func (s *aggregationService) GetTotalSales() (float64, error) {
 func (s *aggregationService) GetPopularItems() ([]models.PopularItem, error) {
 	orders, err := s.orderRepo.GetAll()
 	if err != nil {
+		logger.Log.WithError(err).Error("Failed to retrieve orders for popular items calculation")
 		return nil, fmt.Errorf("fetching orders: %w", err)
 	}
 
 	menuItems, err := s.menuRepo.GetAll()
 	if err != nil {
+		logger.Log.WithError(err).Error("Failed to retrieve menu items for popular items calculation")
 		return nil, fmt.Errorf("fetching menu items: %w", err)
 	}
 

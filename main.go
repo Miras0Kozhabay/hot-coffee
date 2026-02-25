@@ -5,22 +5,22 @@ import (
 	"fmt"
 	"hot-coffee/internal/dal"
 	"hot-coffee/internal/handler"
+	"hot-coffee/internal/logger"
 	"hot-coffee/internal/service"
 	"hot-coffee/internal/utils"
-	"log"
 	"net/http"
 	"os"
-	"log/slog"
 	"os/signal"
 	"syscall"
 	"time"
 )
 
 func main() {
+	logger.Init()
 	cfg, err := utils.Load()
-	 if err != nil {
-		slog.Error("Failed to load configurations", "error", err)
-	 }
+	if err != nil {
+		logger.Log.WithError(err).Error("Failed to load configurations")
+	}
 
 	invRepo := dal.NewInventoryRepository(cfg.DataDir)
 	menuRepo := dal.NewMenuRepository(cfg.DataDir)
@@ -35,7 +35,7 @@ func main() {
 	menuHandler := handler.NewMenuHandler(menuService)
 	orderHandler := handler.NewOrderHandler(orderService)
 	agrHandler := handler.NewAggregationHandler(agrService)
-	// Настройка роутера 
+	// Настройка роутера
 	mux := http.NewServeMux()
 	handler.RegisterRoutes(mux, invHandler, menuHandler, orderHandler, agrHandler)
 	// Запуск серверa
@@ -50,7 +50,7 @@ func main() {
 		fmt.Printf("starting server on port %s...\n", cfg.Port)
 		fmt.Printf("dir is %s...\n", cfg.DataDir)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("listen: %s\n", err)
+			logger.Log.WithError(err).Fatal("Server failed to start")
 		}
 	}()
 	quit := make(chan os.Signal, 1)
@@ -61,7 +61,7 @@ func main() {
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
 		// fmt.Errorf("server forced to shutdown: %w", err) заменить библиотекой лог
-		
+		logger.Log.WithError(err).Fatal("Server forced to shutdown")
 	}
-	fmt.Println("server exiting")
+	logger.Log.Info("Server exiting")
 }

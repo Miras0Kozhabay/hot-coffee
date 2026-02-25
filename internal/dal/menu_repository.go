@@ -2,6 +2,7 @@ package dal
 
 import (
 	"errors"
+	"hot-coffee/internal/logger"
 	"hot-coffee/internal/utils"
 	"hot-coffee/models"
 	"path/filepath"
@@ -22,7 +23,7 @@ type menuRepository struct {
 func NewMenuRepository(dir string) MenuRepository {
 	filePath := filepath.Join(dir, "menu_items.json")
 	if err := utils.EnsureFileExists(filePath); err != nil {
-		panic("failed to initialize menu database: " + err.Error())
+		logger.Log.WithError(err).Fatal("Failed to initialize menu database")
 	}
 	return &menuRepository{filePath}
 }
@@ -61,6 +62,7 @@ func (r *menuRepository) Update(id string, updateItem models.MenuItem) error {
 	if !found {
 		return errors.New("menu item not found")
 	}
+	logger.Log.WithField("item", updateItem).Info("Updating menu item")
 	return r.SaveAll(items)
 }
 
@@ -81,6 +83,7 @@ func (r *menuRepository) Delete(id string) error {
 	if !found {
 		return errors.New("menu item not found")
 	}
+	logger.Log.WithField("itemID", id).Info("Deleting menu item")
 	return r.SaveAll(newItems)
 }
 

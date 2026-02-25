@@ -2,6 +2,7 @@ package dal
 
 import (
 	"errors"
+	"hot-coffee/internal/logger"
 	"hot-coffee/internal/utils"
 	"hot-coffee/models"
 	"path/filepath"
@@ -21,7 +22,7 @@ type orderRepository struct {
 func NewOrderRepository(dir string) OrderRepository {
 	filePath := filepath.Join(dir, "orders.json")
 	if err := utils.EnsureFileExists(filePath); err != nil {
-		panic("failed to initialize order database: " + err.Error())
+		logger.Log.WithError(err).Fatal("Failed to initialize order database")
 	}
 	return &orderRepository{filePath}
 }

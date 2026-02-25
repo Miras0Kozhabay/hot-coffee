@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path/filepath"
 
+	"hot-coffee/internal/logger"
 	"hot-coffee/internal/utils"
 	"hot-coffee/models"
 )
@@ -24,7 +25,7 @@ type inventoryRepository struct {
 func NewInventoryRepository(dir string) InventoryRepository {
 	filePath := filepath.Join(dir, "inventory.json")
 	if err := utils.EnsureFileExists(filePath); err != nil {
-		panic("failed to initialize inventory database: " + err.Error())
+		logger.Log.WithError(err).Fatal("Failed to initialize inventory database")
 	}
 	return &inventoryRepository{filePath}
 }
@@ -56,6 +57,7 @@ func (r *inventoryRepository) Create(item models.InventoryItem) error {
 		return err
 	}
 	items = append(items, item)
+	logger.Log.WithField("item", item).Info("Creating inventory item")
 	return r.Save(items)
 }
 
@@ -70,6 +72,7 @@ func (r *inventoryRepository) Update(item models.InventoryItem) error {
 			return r.Save(items)
 		}
 	}
+
 	return fmt.Errorf("inventory item not found: %s", item.IngredientID)
 }
 

@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"hot-coffee/internal/dal"
+	"hot-coffee/internal/logger"
 	"hot-coffee/models"
-	"log/slog"
 	"time"
 )
 
@@ -34,12 +34,19 @@ func NewOrderService(o dal.OrderRepository, m dal.MenuRepository, i dal.Inventor
 
 func (s *orderService) CreateOrder(order *models.Order) error {
 	if order.CustomerName == "" || len(order.Items) == 0 {
+		logger.Log.WithFields(map[string]interface{}{
+			"customerName": order.CustomerName,
+			"itemsCount":   len(order.Items),
+		}).Error("Invalid order: missing customer name or items")
 		return errors.New("invalid order: missing  customer name or items")
 	}
 	requiredIngredients := make(map[string]float64)
 	for _, item := range order.Items {
 		menuItem, err := s.menuRepo.GetByID(item.ProductID)
 		if err != nil {
+			logger.Log.WithFields(map[string]interface{}{
+				"productID": item.ProductID,
+			}).Error("Product not found in menu")
 			return fmt.Errorf("product '%s' not found in menu", item.ProductID)
 		}
 		for _, ing := range menuItem.Ingredients {
@@ -49,6 +56,7 @@ func (s *orderService) CreateOrder(order *models.Order) error {
 
 	inventory, err := s.invRepo.GetAll()
 	if err != nil {
+		logger.Log.WithError(err).Error("Failed to load inventory")
 		return fmt.Errorf("failed to load inventory: %w", err)
 	}
 
@@ -62,19 +70,33 @@ func (s *orderService) CreateOrder(order *models.Order) error {
 		if !exists || invItem.Quantity < reqQty {
 			available := 0.0
 			name := ingID
+			logger.Log.WithFields(map[string]interface{}{
+				"ingredientID": ingID,
+			}).Info("Ingredient not found in inventory")
 			if exists {
 				available = invItem.Quantity
 				name = invItem.Name
 			}
+			logger.Log.WithFields(map[string]interface{}{
+				"ingredientID": ingID,
+				"requiredQty":  reqQty,
+				"availableQty": available,
+			}).Error("Insufficient stock for ingredient")
 			return fmt.Errorf("insufficient stock for '%s': required %.2f, available %.2f", name, reqQty, available)
 		}
 	}
 
 	for ingID, reqQty := range requiredIngredients {
+		logger.Log.WithFields(map[string]interface{}{
+			"ingredientID": ingID,
+			"requiredQty":  reqQty,
+			"availableQty": invMap[ingID].Quantity,
+		}).Info("Deducting ingredient from inventory")
 		invMap[ingID].Quantity -= reqQty
 	}
 
 	if err := s.invRepo.Save(inventory); err != nil {
+		logger.Log.WithError(err).Error("Failed to update inventory")
 		return errors.New("failed to update inventory records")
 	}
 
@@ -86,8 +108,13 @@ func (s *orderService) CreateOrder(order *models.Order) error {
 	orders = append(orders, *order)
 
 	if err := s.orderRepo.SaveAll(orders); err != nil {
+		logger.Log.WithError(err).Error("Failed to save order to database")
 		return errors.New("failed to save order to database")
 	}
+	logger.Log.WithFields(map[string]interface{}{
+		"orderID":      order.ID,
+		"customerName": order.CustomerName,
+	}).Info("Order created")
 	return nil
 }
 
@@ -103,39 +130,56 @@ func (s *orderService) UpdateOrder(id string, updatedOrder models.Order) error {
 	// 1. Сначала загружаем текущую версию заказа из базы
 	oldOrder, err := s.orderRepo.GetByID(id)
 	if err != nil {
+		// logger.Log.WithError(err).Error("Failed to retrieve order for update")
 		return errors.New("order not found")
 	}
 	if updatedOrder.Status == "" {
 		updatedOrder.Status = oldOrder.Status
 	}
 	if oldOrder.Status == "closed" {
+		// logger.Log.WithFields(map[string]interface{}{
+		// 	"orderID": id,
+		// }).Error("Attempt to update a closed order")
 		return errors.New("cannot modify a closed order")
 	}
 	if err := s.returnIngredientsToInventory(oldOrder); err != nil {
+		logger.Log.WithError(err).Error("Failed to return ingredients to inventory during order update")
 		return fmt.Errorf("inventory sync failed (return): %w", err)
 	}
 	if err := s.deductIngredientsFromInventory(updatedOrder); err != nil {
 		_ = s.deductIngredientsFromInventory(oldOrder)
+		logger.Log.WithError(err).Error("Failed to deduct ingredients from inventory during order update")
 		return fmt.Errorf("inventory sync failed (deduct): %w", err)
 	}
 	updatedOrder.ID = oldOrder.ID
 	updatedOrder.CreatedAt = oldOrder.CreatedAt
+	logger.Log.WithFields(map[string]interface{}{
+		"orderID": id,
+	}).Info("Order updated")
 	return s.orderRepo.Update(id, updatedOrder)
 }
 
 func (s *orderService) DeleteOrder(id string) error {
 	order, err := s.orderRepo.GetByID(id)
 	if err != nil {
+		logger.Log.WithError(err).Error("Failed to retrieve order for deletion")
 		return errors.New("order not found")
 	}
 	if order.Status == "closed" {
+		logger.Log.WithFields(map[string]interface{}{
+			"orderID": id,
+		}).Error("Attempt to delete a closed order")
 		return errors.New("cannot delete a finalized financial record")
 	}
 	if order.Status == "open" {
 		if err := s.returnIngredientsToInventory(order); err != nil {
-			slog.Error("Failed to return ingredients on deletion", "error", err)
+			logger.Log.WithError(err).Error("Failed to return ingredients on deletion")
+			// slog.Error("Failed to return ingredients on deletion", "error", err)
 		}
 	}
+	logger.Log.WithFields(map[string]interface{}{
+		"orderID": id,
+	}).Info("Order deleted")
 	return s.orderRepo.Delete(id)
 }
 
@@ -146,10 +190,16 @@ func (s *orderService) CloseOrder(id string) error {
 	}
 
 	if order.Status == "closed" {
+		logger.Log.WithFields(map[string]interface{}{
+			"orderID": id,
+		}).Error("Attempt to close an already closed order")
 		return errors.New("order is already closed")
 	}
 
 	order.Status = "closed"
+	logger.Log.WithFields(map[string]interface{}{
+		"orderID": id,
+	}).Info("Order closed")
 	return s.orderRepo.Update(id, order)
 }
 
@@ -173,6 +223,9 @@ func (s *orderService) returnIngredientsToInventory(order models.Order) error {
 			}
 		}
 	}
+	logger.Log.WithFields(map[string]interface{}{
+		"orderID": order.ID,
+	}).Info("Inventory updated (return) for order")
 	return s.invRepo.Save(inventory)
 }
 
@@ -188,6 +241,9 @@ func (s *orderService) deductIngredientsFromInventory(order models.Order) error 
 	for _, item := range order.Items {
 		menuItem, err := s.menuRepo.GetByID(item.ProductID)
 		if err != nil {
+			logger.Log.WithFields(map[string]interface{}{
+				"productID": item.ProductID,
+			}).Error("Product not found in menu")
 			return fmt.Errorf("товар %s не найден в меню", item.ProductID)
 		}
 
@@ -196,6 +252,11 @@ func (s *orderService) deductIngredientsFromInventory(order models.Order) error 
 			requiredQty := ing.Quantity * float64(item.Quantity)
 
 			if !exists || invItem.Quantity < requiredQty {
+				logger.Log.WithFields(map[string]interface{}{
+					"ingredientID": ing.IngredientID,
+					"requiredQty":  requiredQty,
+					"availableQty": invItem.Quantity,
+				}).Error("Insufficient stock for ingredient")
 				return fmt.Errorf("недостаточно ингредиента '%s'. требуется: %.2f, в наличии: %.2f",
 					ing.IngredientID, requiredQty, invItem.Quantity)
 			}
@@ -207,5 +268,8 @@ func (s *orderService) deductIngredientsFromInventory(order models.Order) error 
 			invMap[ing.IngredientID].Quantity -= ing.Quantity * float64(item.Quantity)
 		}
 	}
+	logger.Log.WithFields(map[string]interface{}{
+		"orderID": order.ID,
+	}).Info("Inventory updated for order")
 	return s.invRepo.Save(inventory)
 }

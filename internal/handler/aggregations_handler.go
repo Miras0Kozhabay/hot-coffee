@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"log/slog"
 	"net/http"
 
+	"hot-coffee/internal/logger"
 	"hot-coffee/internal/service"
 	"hot-coffee/internal/utils"
 )
@@ -19,7 +19,7 @@ func NewAggregationHandler(s service.AggregationService) *AggregationHandler {
 func (h *AggregationHandler) GetTotalSales(w http.ResponseWriter, r *http.Request) {
 	total, err := h.service.GetTotalSales()
 	if err != nil {
-		slog.Error("Failed to calculate total sales", "error", err)
+		logger.Log.WithError(err).Error("Failed to calculate total sales")
 		utils.SendError(w, http.StatusInternalServerError, "Internal server error")
 		return
 	}
@@ -32,7 +32,7 @@ func (h *AggregationHandler) GetTotalSales(w http.ResponseWriter, r *http.Reques
 func (h *AggregationHandler) GetPopularItems(w http.ResponseWriter, r *http.Request) {
 	items, err := h.service.GetPopularItems()
 	if err != nil {
-		slog.Error("Failed to calculate popular items", "error", err)
+		logger.Log.WithError(err).Error("Failed to calculate popular items")
 		utils.SendError(w, http.StatusInternalServerError, "Internal server error")
 		return
 	}
