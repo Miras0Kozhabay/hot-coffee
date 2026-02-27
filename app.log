@@ -57,28 +57,6 @@ time="2026-02-25T19:45:49+05:00" level=info msg="Inventory item deleted" ingredi
 time="2026-02-25T19:45:53+05:00" level=info msg="Menu retrieved" itemsCount=4
 time="2026-02-25T19:47:14+05:00" level=error msg="Menu item with this ID already exists" menuItemID=
 time="2026-02-25T19:47:14+05:00" level=error msg="Failed to create menu item" error="menu item with this ID already exists"
-time="2026-02-25T19:47:19+05:00" level=info msg="Menu item created" menuItemID=" " name=miko
+time="2026-02-25T19:47:19+05:00" level=info msg="Menu item created" menuItemID="    " name=miko
 time="2026-02-25T19:47:19+05:00" level=info msg="Menu item created" menuItemID=" "
 time="2026-02-25T19:47:19+05:00" level=info msg="Menu retrieved" itemsCount=5
-time="2026-02-25T19:48:28+05:00" level=error msg="Menu item price must be greater than zero" menuItemID= price=0
-time="2026-02-25T19:48:28+05:00" level=error msg="Failed to create menu item" error="price must be greater than zero"
-time="2026-02-25T19:48:33+05:00" level=error msg="Menu item with this ID already exists" menuItemID=
-time="2026-02-25T19:48:33+05:00" level=error msg="Failed to create menu item" error="menu item with this ID already exists"
-time="2026-02-25T19:48:58+05:00" level=info msg="Menu retrieved" itemsCount=5
-time="2026-02-25T19:49:00+05:00" level=info msg="Menu item retrieved" menuItemID="What Miko Wants"
-time="2026-02-25T19:51:12+05:00" level=info msg="Server exiting"
-time="2026-02-25T19:51:15+05:00" level=info msg="Application is starting:"
-time="2026-02-25T19:51:19+05:00" level=info msg="Menu retrieved" itemsCount=5
-time="2026-02-25T19:52:00+05:00" level=info msg="Menu item created" menuItemID="Welcome Pack" name="Hello Bundle"
-time="2026-02-25T19:52:00+05:00" level=info msg="Menu item created" menuItemID="Welcome Pack"
-time="2026-02-25T19:52:00+05:00" level=info msg="Menu retrieved" itemsCount=6
-time="2026-02-25T19:52:49+05:00" level=info msg="Menu item deleted" menuItemID="Welcome Pack"
-time="2026-02-25T19:52:49+05:00" level=info msg="Menu item deleted" menuItemID="Welcome Pack"
-time="2026-02-25T19:52:49+05:00" level=info msg="Deleting menu item" itemID="Welcome Pack"
-time="2026-02-25T19:52:49+05:00" level=info msg="Menu item deleted" menuItemID="Welcome Pack"
-time="2026-02-25T19:52:49+05:00" level=info msg="Menu retrieved" itemsCount=5
-time="2026-02-25T19:53:03+05:00" level=error msg="Menu item ID cannot be empty" name="Welcome Pack"
-time="2026-02-25T19:53:03+05:00" level=error msg="Failed to create menu item" error="ID cannot be empty"
-time="2026-02-25T19:59:34+05:00" level=info msg="Menu retrieved" itemsCount=5
-time="2026-02-25T20:00:15+05:00" level=info msg="Menu retrieved" itemsCount=5
-time="2026-02-25T20:00:22+05:00" level=info msg="Server exiting"

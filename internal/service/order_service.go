@@ -238,38 +238,46 @@ func (s *orderService) deductIngredientsFromInventory(order models.Order) error 
 	for i := range inventory {
 		invMap[inventory[i].IngredientID] = &inventory[i]
 	}
+	requiredIngredients := make(map[string]float64)
 	for _, item := range order.Items {
 		menuItem, err := s.menuRepo.GetByID(item.ProductID)
 		if err != nil {
 			logger.Log.WithFields(map[string]interface{}{
 				"productID": item.ProductID,
 			}).Error("Product not found in menu")
-			return fmt.Errorf("товар %s не найден в меню", item.ProductID)
+			return fmt.Errorf("product '%s' not found", item.ProductID)
 		}
-
 		for _, ing := range menuItem.Ingredients {
-			invItem, exists := invMap[ing.IngredientID]
-			requiredQty := ing.Quantity * float64(item.Quantity)
-
-			if !exists || invItem.Quantity < requiredQty {
+			requiredIngredients[ing.IngredientID] += ing.Quantity * float64(item.Quantity)
+		}
+	}
+	for ingID, reqQty := range requiredIngredients {
+		invItem, exists := invMap[ingID]
+		if !exists || invItem.Quantity < reqQty {
+			available := 0.0
+			name := ingID
+			if !exists {
 				logger.Log.WithFields(map[string]interface{}{
-					"ingredientID": ing.IngredientID,
-					"requiredQty":  requiredQty,
-					"availableQty": invItem.Quantity,
-				}).Error("Insufficient stock for ingredient")
-				return fmt.Errorf("недостаточно ингредиента '%s'. требуется: %.2f, в наличии: %.2f",
-					ing.IngredientID, requiredQty, invItem.Quantity)
+					"ingredientID": ingID,
+				}).Info("Ingredient not found in inventory")
 			}
+
+			if exists {
+				available = invItem.Quantity
+				name = invItem.Name
+			}
+
+			logger.Log.WithFields(map[string]interface{}{
+				"ingredientID": ingID,
+				"requiredQty":  reqQty,
+				"availableQty": available,
+			}).Error("Insufficient stock for ingredient")
+
+			return fmt.Errorf("insufficient stock for '%s': required %.2f, available %.2f", name, reqQty, available)
 		}
 	}
-	for _, item := range order.Items {
-		menuItem, _ := s.menuRepo.GetByID(item.ProductID)
-		for _, ing := range menuItem.Ingredients {
-			invMap[ing.IngredientID].Quantity -= ing.Quantity * float64(item.Quantity)
-		}
+	for ingID, reqQty := range requiredIngredients {
+		invMap[ingID].Quantity -= reqQty
 	}
-	logger.Log.WithFields(map[string]interface{}{
-		"orderID": order.ID,
-	}).Info("Inventory updated for order")
 	return s.invRepo.Save(inventory)
 }

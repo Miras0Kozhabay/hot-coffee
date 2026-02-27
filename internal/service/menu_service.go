@@ -45,6 +45,14 @@ func (s *menuService) CreateMenuItem(newItem models.MenuItem) error {
 		}).Error("Menu item ID cannot be empty")
 		return errors.New("ID cannot be empty")
 	}
+	for _, ing := range newItem.Ingredients {
+		if ing.Quantity <= 0 {
+			logger.Log.WithFields(logrus.Fields{
+				"menuItemID": newItem.ID,
+			}).Error("Ingredient quantity must be greater than zero")
+			return errors.New(" quantity must be greater than zero")
+		}
+	}
 	items, err := s.repo.GetAll()
 	if err != nil {
 		return err
@@ -86,6 +94,14 @@ func (s *menuService) UpdateMenuItem(id string, item models.MenuItem) error {
 			"menuItemID": id,
 		}).Error("Menu item name cannot be empty")
 		return errors.New("name cannot be empty")
+	}
+	for _, ing := range item.Ingredients {
+		if ing.Quantity <= 0 {
+			logger.Log.WithFields(logrus.Fields{
+				"menuItemID": item.ID,
+			}).Error("Ingredient quantity must be greater than zero")
+			return errors.New(" quantity must be greater than zero")
+		}
 	}
 	item.ID = id
 	logger.Log.WithFields(logrus.Fields{
